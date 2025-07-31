@@ -1,0 +1,41 @@
+import React, { useState } from 'react';
+import Timesheet from './components/Timesheet';
+import Leave from './components/Leave';
+import AlertPopup from './components/AlertPopup';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+function App() {
+  const [activeTab, setActiveTab] = useState('timesheet');
+  const [compOffData, setCompOffData] = useState({});
+  const [alertInfo, setAlertInfo] = useState(null);
+
+  // Callback for Leave to update comp off
+  const handleCompOffUpdate = (update) => {
+    setCompOffData(prev => ({ ...prev, ...update }));
+  };
+
+  // Alert handlers
+  const handleAlertYes = () => {
+    // User wants to fill entry, switch to timesheet
+    setActiveTab('timesheet');
+    // Advance to next alert (call nextAlert in Timesheet)
+    // ...
+  };
+  const handleAlertNo = () => {
+    // Advance to next alert (call nextAlert in Timesheet)
+    // ...
+  };
+
+  return (
+    <div>
+      <nav className="nav nav-tabs mb-4">
+        <button className={`nav-link${activeTab === 'timesheet' ? ' active' : ''}`} onClick={() => setActiveTab('timesheet')}>Timesheet</button>
+        <button className={`nav-link${activeTab === 'leave' ? ' active' : ''}`} onClick={() => setActiveTab('leave')}>Leave Management</button>
+      </nav>
+      {activeTab === 'timesheet' && <Timesheet setAlertInfo={setAlertInfo} compOffData={compOffData} />}
+      {activeTab === 'leave' && <Leave onCompOffUpdate={handleCompOffUpdate} />}
+      {alertInfo && <AlertPopup date={alertInfo.date} onYes={handleAlertYes} onNo={handleAlertNo} />}
+    </div>
+  );
+}
+export default App;

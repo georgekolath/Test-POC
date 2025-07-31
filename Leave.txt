@@ -1,0 +1,66 @@
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+function Leave({ onCompOffUpdate }) {
+  const [leaveType, setLeaveType] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [reason, setReason] = useState('');
+  const [status, setStatus] = useState('Pending');
+
+  const handleApplyLeave = async () => {
+    // Simulate backend call
+    const leaveData = {
+      leaveType,
+      startDate,
+      endDate,
+      reason,
+      status,
+    };
+    // Update comp off for the selected date range
+    if (onCompOffUpdate && startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const compOffUpdate = {};
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const dayName = d.toLocaleDateString('en-US', { weekday: 'long' });
+        compOffUpdate[dayName] = 8; // Example: 8 hours comp off per leave day
+      }
+      onCompOffUpdate(compOffUpdate);
+    }
+    alert('Leave applied!');
+  };
+
+  return (
+    <div className="container" style={{ maxWidth: '480px', marginTop: '32px' }}>
+      <h3 className="mb-4">Leave Management</h3>
+      <div className="mb-3">
+        <label className="form-label">Leave Type</label>
+        <select className="form-select" value={leaveType} onChange={e => setLeaveType(e.target.value)}>
+          <option value="">Select</option>
+          <option value="Sick">Sick</option>
+          <option value="Casual">Casual</option>
+          <option value="Comp Off">Comp Off</option>
+        </select>
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Start Date</label>
+        <input type="date" className="form-control" value={startDate} onChange={e => setStartDate(e.target.value)} />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">End Date</label>
+        <input type="date" className="form-control" value={endDate} onChange={e => setEndDate(e.target.value)} />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Reason</label>
+        <input type="text" className="form-control" value={reason} onChange={e => setReason(e.target.value)} />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Status</label>
+        <input type="text" className="form-control" value={status} readOnly />
+      </div>
+      <button className="btn btn-primary" onClick={handleApplyLeave}>Apply Leave</button>
+    </div>
+  );
+}
+export default Leave;

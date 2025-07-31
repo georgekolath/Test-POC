@@ -1,0 +1,16 @@
+// Example API service for frontend-backend communication
+export async function fetchTimesheet(userId, weekStart) {
+  const res = await fetch(`/api/timesheet?userId=${userId}&weekStart=${weekStart}`);
+  if (!res.ok) throw new Error('Failed to fetch timesheet');
+  return await res.json();
+}
+
+export async function applyLeave(leaveData) {
+  const res = await fetch('/api/leave/apply', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(leaveData)
+  });
+  if (!res.ok) throw new Error('Failed to apply leave');
+  return await res.json();
+}
